@@ -4,5 +4,5 @@
 # VIM
 .*.swp
 
-graylog/node-id
-graylog_web/generated.keystore
+graylog/config/node-id
+graylog/data
