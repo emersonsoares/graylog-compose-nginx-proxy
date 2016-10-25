@@ -1,0 +1,35 @@
+version: '2.0'
+
+services:
+  mongo:
+    container_name: mongo_graylog
+    image: mongo:3
+    volumes:
+      - ./graylog/data/mongo:/data/db
+  elasticsearch:
+    container_name: elasticsearch_graylog
+    image: elasticsearch:2
+    command: "elasticsearch -Des.cluster.name='graylog'"
+    volumes:
+      - ./graylog/data/elasticsearch:/usr/share/elasticsearch/data
+  graylog:
+    container_name: graylog
+    image: graylog2/server
+    links:
+      - mongo
+      - elasticsearch
+    volumes:
+      - ./graylog/data/journal:/usr/share/graylog/data/journal
+      - ./graylog/config:/usr/share/graylog/data/config
+    environment:
+      GRAYLOG_WEB_ENDPOINT_URI: http://127.0.0.1:3000/api
+  nginx:  
+    container_name: nginx_proxy
+    image: nginx:1.9
+    ports:
+      - 3000:80
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/.htpasswd:/etc/nginx/.htpasswd:ro
+    links:
+      - graylog:graylog.service
