@@ -1,8 +1,0 @@
-# local files
-.DS_Store
-
-# VIM
-.*.swp
-
-graylog/config/node-id
-graylog/data
